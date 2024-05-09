@@ -35,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  final channel = MethodChannel('com.amorn.watch');
+  final channel = MethodChannel('com.rectify.watch');
 
   Future<void> _incrementCounter() async {
     setState(() {

@@ -24,7 +24,7 @@ import WatchConnectivity
     private func initFlutterChannel() {
         if let controller = window?.rootViewController as? FlutterViewController {
             let channel = FlutterMethodChannel(
-                name: "com.amorn.watch",
+                name: "com.rectify.watch",
                 binaryMessenger: controller.binaryMessenger)
             
             channel.setMethodCallHandler({ [weak self] (
@@ -50,6 +50,11 @@ import WatchConnectivity
     }
 }
 
+
+
+
+//WCSessionDelegate ist AppDelegate der WatchApp
+//connect WCSEssionDelegate to AppDelegate
 extension AppDelegate: WCSessionDelegate {
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
@@ -64,12 +69,12 @@ extension AppDelegate: WCSessionDelegate {
         
     }
     
+    //Daten von der WatchKit-Erweiterung werden zur Flutter-App weitergeleitet
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         DispatchQueue.main.async {
             if let method = message["method"] as? String, let controller = self.window?.rootViewController as? FlutterViewController {
-                let channel = FlutterMethodChannel(
-                    name: "com.amorn.watch",
-                    binaryMessenger: controller.binaryMessenger)
+                let channel = FlutterMethodChannel(name: "com.rectify.watch", binaryMessenger: controller.binaryMessenger)
+                
                 channel.invokeMethod(method, arguments: message)
             }
         }
