@@ -15,9 +15,11 @@ struct ContentView: View {
             Text("Counter: \(viewModel.counter)")
                 .padding()
             Button(action: {
-                viewModel.sendDataMessage(for: .sendCounterToFlutter, data: ["counter": viewModel.counter + 1])
+                
+                //notifies the Flutter App that it got increased
+                viewModel.sendDataMessage(for: .sendCounterToFlutter, data: ["counter": viewModel.counter])
             }) {
-                Text("+ by 2")
+                Text("+ by 1")
             }
         }
         
