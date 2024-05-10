@@ -8,9 +8,13 @@
 import Foundation
 import WatchConnectivity
 
-class WatchViewModel: NSObject, ObservableObject {
+@Observable
+class WatchViewModel: NSObject{
     var session: WCSession
-    @Published var counter = 0
+    
+    //counter doesn't get changed from the Button
+    //counter gets set only through the message channel from swift
+    var counter = 0
     
     // Add more cases if you have more receive method
     enum WatchReceiveMethod: String {
@@ -29,19 +33,22 @@ class WatchViewModel: NSObject, ObservableObject {
         session.activate()
     }
     
+    //declares the structure for the message that gets send to Flutter
     func sendDataMessage(for method: WatchSendMethod, data: [String: Any] = [:]) {
         sendMessage(for: method.rawValue, data: data)
     }
     
 }
 
+
 extension WatchViewModel: WCSessionDelegate {
     
+    //func necessary to make it conform to app delegate
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         
     }
     
-    // Receive message From AppDelegate.swift that send from iOS devices
+    // data that gets passed from flutter to the AppDelegate File gets recieved on the Watch through this function
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         DispatchQueue.main.async {
             guard let method = message["method"] as? String, let enumMethod = WatchReceiveMethod(rawValue: method) else {
@@ -49,8 +56,10 @@ extension WatchViewModel: WCSessionDelegate {
             }
             
             switch enumMethod {
+            // if data should be send to the native side
             case .sendCounterToNative:
-                self.counter = (message["data"] as? Int) ?? 0
+                //recieve the counter value from Flutter
+                self.counter = (message["data"] as? Int) ?? 0 //if flutter didn't send something the value is 0
             }
         }
     }
