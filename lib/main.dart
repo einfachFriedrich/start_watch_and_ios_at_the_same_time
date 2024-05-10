@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // Function for recieving Data from Native
   Future<void> _initFlutterChannel() async {
     /*await*/ channel.setMethodCallHandler((call) async {
-      //check which way the data has to go
+      //if the AppDelegate sends data to Flutter
       switch (call.method) {
         case "sendCounterToFlutter":
           _counter = call.arguments["data"]["counter"];

@@ -26,6 +26,7 @@ class WatchViewModel: NSObject{
         case sendCounterToFlutter
     }
     
+    //init WCSession
     init(session: WCSession = .default) {
         self.session = session
         super.init()
@@ -41,6 +42,7 @@ class WatchViewModel: NSObject{
 }
 
 
+//Sends Data from WatchOS to AppDelegate (to later push to Flutter)
 extension WatchViewModel: WCSessionDelegate {
     
     //func necessary to make it conform to app delegate
