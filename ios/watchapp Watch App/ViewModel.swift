@@ -20,12 +20,14 @@ class WatchViewModel: NSObject{
     // Add more cases if you have more receive method
     enum WatchReceiveMethod: String {
         case sendDataToNative
+        case vibratesToNative
     }
     
     // Add more cases if you have more sending method
     enum WatchSendMethod: String {
         case sendDataToFlutter
         case syncRequest
+        case vibratesToFlutter
     }
     
     //init WCSession
@@ -63,7 +65,10 @@ extension WatchViewModel: WCSessionDelegate {
                 case .sendDataToNative:
                     //recieve the counter value from Flutter
                     self.counter = (message["data"] as? Int) ?? 0 //if flutter didn't send something the value is 0
+                case .vibratesToNative:
+                    self.vibrates = (message["data"] as? Bool) ?? false //if flutter didn't send something the value is 0
                 }
+                
             }
         }
     

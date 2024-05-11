@@ -28,9 +28,13 @@ struct ContentView: View {
             }) {
                 Text("+ by 1")
             }
+            Toggle("Vibrates", isOn: $viewModel.vibrates)
+                .onChange(of: viewModel.vibrates) { oldValue, newValue in
+                    viewModel.sendDataMessage(for: .vibratesToFlutter, data: ["vibrates": viewModel.vibrates])
+                }
         }
-        .task {
+        /*.task {
             viewModel.sendDataMessage(for: .syncRequest, data: ["counter": viewModel.counter])
-        }
+        }*/
     }
-}
+} 

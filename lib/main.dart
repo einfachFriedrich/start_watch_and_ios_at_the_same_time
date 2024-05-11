@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -37,6 +38,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   //initial counter value
   int _counter = 0;
+  bool _vibrates = false;
   //setup methodChannel
   final channel = MethodChannel('com.rectify.watch');
 
@@ -45,6 +47,16 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       //add 1 to the counter variable
       _counter++;
+    });
+
+    // Send data to Native
+    await channel.invokeMethod(
+        "flutterToWatch", {"method": "sendDataToNative", "data": _counter});
+  }
+  Future<void> _toggleVibrates() async {
+    setState(() {
+      //add 1 to the counter variable
+      _vibrates = !_vibrates;
     });
 
     // Send data to Native
@@ -66,6 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
         case "syncRequest":
           await channel.invokeMethod(
           "flutterToWatch", {"method": "sendDataToNative", "data": _counter});
+          break;
+        case "vibratesToFlutter":
+          _toggleVibrates();
           break;
 
         //do nothing if it's shouldn't be recieved (declared on the iOS Side)
@@ -95,12 +110,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            Text(
+              _vibrates ? "Vibrates ist true" : "Vibrates ist false",
             ),
             //Display Counter
             Text(
-              '$_counter',
+              "$_counter",
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
