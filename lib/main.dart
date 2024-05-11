@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   //setup methodChannel
   final channel = MethodChannel('com.rectify.watch');
 
-  //gets called after the button in the ContentView is pressed
+  //gets called after the button in the ContentView or FlutterView is pressed
   Future<void> _incrementCounter() async {
     setState(() {
       //add 1 to the counter variable
@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Send data to Native
     await channel.invokeMethod(
-        "flutterToWatch", {"method": "sendCounterToNative", "data": _counter});
+        "flutterToWatch", {"method": "sendDataToNative", "data": _counter});
   }
 
 
@@ -58,10 +58,14 @@ class _MyHomePageState extends State<MyHomePage> {
     /*await*/ channel.setMethodCallHandler((call) async {
       //if the AppDelegate sends data to Flutter
       switch (call.method) {
-        case "sendCounterToFlutter":
+        case "sendDataToFlutter":
           _counter = call.arguments["data"]["counter"];
           _incrementCounter();
           //exit func
+          break;
+        case "syncRequest":
+          await channel.invokeMethod(
+          "flutterToWatch", {"method": "sendDataToNative", "data": _counter});
           break;
 
         //do nothing if it's shouldn't be recieved (declared on the iOS Side)
@@ -76,6 +80,8 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     //calls methodChannel for recieving Data from Native
     _initFlutterChannel();
+    channel.invokeMethod(
+        "flutterToWatch", {"method": "sendDataToNative", "data": _counter});
   }
 
   @override

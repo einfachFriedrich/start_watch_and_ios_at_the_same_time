@@ -9,20 +9,28 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var viewModel: WatchViewModel = WatchViewModel()
-    
+    @State private var firstAppStart = true
+   
     var body: some View {
         VStack {
             Text("Counter: \(viewModel.counter)")
                 .padding()
             Button(action: {
-                
-                //notifies the Flutter App that it got increased
-                viewModel.sendDataMessage(for: .sendCounterToFlutter, data: ["counter": viewModel.counter])
+                if firstAppStart{
+                    viewModel.sendDataMessage(for: .syncRequest, data: ["counter": viewModel.counter])
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5){
+                        viewModel.sendDataMessage(for: .sendDataToFlutter, data: ["counter": viewModel.counter])
+                    }
+                    firstAppStart = false
+                } else{
+                    viewModel.sendDataMessage(for: .sendDataToFlutter, data: ["counter": viewModel.counter])
+                }
             }) {
                 Text("+ by 1")
             }
         }
-        
-        
+        .task {
+            viewModel.sendDataMessage(for: .syncRequest, data: ["counter": viewModel.counter])
+        }
     }
 }
