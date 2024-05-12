@@ -7,6 +7,7 @@
 
 import Foundation
 import WatchConnectivity
+import WatchKit
 
 @Observable
 class WatchViewModel: NSObject{

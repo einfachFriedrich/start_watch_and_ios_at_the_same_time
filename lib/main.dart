@@ -61,7 +61,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Send data to Native
     await channel.invokeMethod(
-        "flutterToWatch", {"method": "sendDataToNative", "data": _counter});
+      "flutterToWatch", {"method" : "vibratesToNative", "data": _vibrates}
+    );
+  }
+
+  Future<void> _syncRequest() async{
+    await channel.invokeMethod(
+            "flutterToWatch", {"method": "sendDataToNative", "data": _counter}
+          );
+          await channel.invokeMethod(
+           "flutterToWatch", {"method": "vibratesToNative", "data": _vibrates}
+          );
   }
 
 
@@ -76,8 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
           //exit func
           break;
         case "syncRequest":
-          await channel.invokeMethod(
-          "flutterToWatch", {"method": "sendDataToNative", "data": _counter});
+          _syncRequest();
           break;
         case "vibratesToFlutter":
           _toggleVibrates();

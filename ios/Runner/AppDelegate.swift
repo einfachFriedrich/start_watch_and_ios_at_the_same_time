@@ -92,7 +92,7 @@ extension AppDelegate: WCSessionDelegate {
         
     }
     
-    //Daten von der WatchKit-Erweiterung werden zur Flutter-App weitergeleitet
+    
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         DispatchQueue.main.async {
             if let method = message["method"] as? String, let controller = self.window?.rootViewController as? FlutterViewController {
